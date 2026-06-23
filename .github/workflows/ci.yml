@@ -1,0 +1,37 @@
+name: CI Pipeline
+
+# Wann soll die Pipeline laufen?
+on:
+  push:
+    branches: [main]      # Bei Push auf main-Branch
+  pull_request:
+    branches: [main]      # Bei Pull Requests gegen main
+
+# Ein Job = eine Ausführungsumgebung (hier: Ubuntu)
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest  # GitHub stellt frischen Ubuntu-Runner bereit
+
+    steps:
+      # 1. Code auschecken (klont das Repo in den Runner)
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      # 2. Node.js installieren + npm Cache aktivieren
+      - name: Node.js einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'        # Node 20 LTS
+          cache: 'npm'              # Beschleunigt npm ci durch Caching
+
+      # 3. Dependencies installieren (npm ci = clean install, schneller & deterministisch)
+      - name: Dependencies installieren
+        run: npm ci
+
+      # 4. Production-Build erstellen (prüft auf Syntaxfehler, Typescript-Fehler, etc.)
+      - name: Build erstellen
+        run: npm run build
+
+      # 5. Tests ausführen (--run = einmal laufen & beenden, nicht watch-mode)
+      - name: Tests ausführen
+        run: npm test -- --run

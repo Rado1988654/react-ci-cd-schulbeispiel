@@ -1,0 +1,6 @@
+/* Minimales Styling für das Beispiel */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, sans-serif; line-height: 1.5; padding: 2rem; }
+button { padding: 0.5rem 1rem; cursor: pointer; background: #0066cc; color: white; border: none; border-radius: 4px; }
+button:hover { background: #0052a3; }
+p { margin-top: 1rem; }

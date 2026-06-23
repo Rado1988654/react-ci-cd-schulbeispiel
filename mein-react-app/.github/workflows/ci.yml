@@ -1,0 +1,38 @@
+# GitHub Actions CI Pipeline - läuft bei jedem Push & Pull Request
+name: CI Pipeline
+
+# WANN soll die Pipeline laufen?
+on:
+  push:
+    branches: [main]           # Bei Push auf main-Branch
+  pull_request:
+    branches: [main]           # Bei Pull Requests gegen main
+
+# JOBS: Was soll passieren?
+jobs:
+  build-and-test:              # Job-Name (frei wählbar)
+    runs-on: ubuntu-latest     # Runner: Ubuntu VM (kostenlos bei GitHub)
+
+    steps:                     # Einzelschritte im Job
+      # 1. Code auschecken
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Node.js installieren + npm Cache nutzen
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'           # Node.js Version (LTS)
+          cache: 'npm'                 # Npm-Cache zwischen Runs speichern
+
+      # 3. Dependencies installieren (ci = clean install, schneller & deterministisch)
+      - name: Install Dependencies
+        run: npm ci
+
+      # 4. Production-Build prüfen (fängt Syntax/Type-Fehler ab)
+      - name: Build Project
+        run: npm run build
+
+      # 5. Tests ausführen (--run = einmal durchlaufen, nicht Watch-Modus)
+      - name: Run Tests
+        run: npm test -- --run

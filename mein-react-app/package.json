@@ -1,0 +1,29 @@
+{
+  "name": "mein-react-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",          // ES-Module (import/export statt require)
+  "scripts": {
+    "dev": "vite",           // Startet Dev-Server (localhost:5173)
+    "build": "vite build",   // Erstellt Produktions-Build in dist/
+    "lint": "oxlint",        // Prüft Code auf Fehler (optional)
+    "preview": "vite preview", // Testet Build lokal vor Deploy
+    "test": "vitest"         // Führt Unit-Tests aus (Watch-Modus)
+    // In CI: "npm test -- --run" läuft einmal durch und endet
+  },
+  "dependencies": {
+    "react": "^19.2.7",      // React Core
+    "react-dom": "^19.2.7"   // React für Browser (DOM)
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",   // Zusätzliche Matcher (toBeInTheDocument, etc.)
+    "@testing-library/react": "^16.3.2",     // Render React-Komponenten in Tests
+    "@types/react": "^19.2.17",              // TypeScript-Typen für React
+    "@types/react-dom": "^19.2.3",           // TypeScript-Typen für ReactDOM
+    "@vitejs/plugin-react": "^6.0.2",        // Vite Plugin für React (JSX, Fast Refresh)
+    "jsdom": "^29.1.1",                      // Simuliert Browser-DOM in Node.js (für Tests)
+    "oxlint": "^1.69.0",                     // Schneller Linter (Alternative zu ESLint)
+    "vite": "^8.1.0",                        // Build-Tool & Dev-Server
+    "vitest": "^4.1.9"                       // Test-Framework (in Vite integriert)
+  }
+}

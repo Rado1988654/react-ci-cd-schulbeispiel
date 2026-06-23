@@ -1,0 +1,18 @@
+/* Globale Basis-Styles */
+* {
+  box-sizing: border-box;           /* Padding/Border in Breite inklusive */
+}
+
+body {
+  margin: 0;                        /* Standard-Margin entfernen */
+  font-family: system-ui, sans-serif; /* System-Schriftart nutzen */
+  background: #fafafa;              /* Heller Hintergrund */
+  color: #333;                      /* Dunkle Textfarbe */
+}
+
+#root {
+  max-width: 600px;                 /* Max. Breite */
+  margin: 0 auto;                   /* Zentriert */
+  padding: 2rem;                    /* Innenabstand */
+  text-align: center;               /* Text zentriert */
+}
