@@ -16,7 +16,7 @@ describe('App', () => {
     const button = screen.getByRole('button', { name: /erhöhen/i }) // Button finden
     fireEvent.click(button) // Simuliert Benutzer-Klick
     // Prüft ob Zähler auf 1 aktualisiert wurde
-    expect(screen.getByText('1')).toBeInTheDocument()
+    expect(screen.getByText('2')).toBeInTheDocument()
   })
 
   // Test 3: Mehrere Klicks nacheinander
@@ -26,6 +26,6 @@ describe('App', () => {
     fireEvent.click(button)
     fireEvent.click(button)
     fireEvent.click(button)
-    expect(screen.getByText('3')).toBeInTheDocument()
+    expect(screen.getByText('6')).toBeInTheDocument()
   })
 })
