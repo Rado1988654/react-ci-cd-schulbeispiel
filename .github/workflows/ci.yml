@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI/CD Pipeline
 
 # Wann soll die Pipeline laufen?
 on:
@@ -7,31 +7,60 @@ on:
   pull_request:
     branches: [main]      # Bei Pull Requests gegen main
 
-# Ein Job = eine Ausführungsumgebung (hier: Ubuntu)
-jobs:
-  build-and-test:
-    runs-on: ubuntu-latest  # GitHub stellt frischen Ubuntu-Runner bereit
+# Berechtigungen für GitHub Pages Deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
+# Erlaube nur einen Deployment gleichzeitig
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  # Job 1: Build & Test
+  build-and-test:
+    runs-on: ubuntu-latest
     steps:
-      # 1. Code auschecken (klont das Repo in den Runner)
+      # 1. Code auschecken
       - name: Repository auschecken
         uses: actions/checkout@v4
 
-      # 2. Node.js installieren + npm Cache aktivieren
+      # 2. Node.js einrichten
       - name: Node.js einrichten
         uses: actions/setup-node@v4
         with:
-          node-version: '20'        # Node 20 LTS
-          cache: 'npm'              # Beschleunigt npm ci durch Caching
+          node-version: '20'
+          cache: 'npm'
 
-      # 3. Dependencies installieren (npm ci = clean install, schneller & deterministisch)
+      # 3. Dependencies installieren
       - name: Dependencies installieren
         run: npm ci
 
-      # 4. Production-Build erstellen (prüft auf Syntaxfehler, Typescript-Fehler, etc.)
+      # 4. Build erstellen
       - name: Build erstellen
         run: npm run build
 
-      # 5. Tests ausführen (--run = einmal laufen & beenden, nicht watch-mode)
+      # 5. Tests ausführen
       - name: Tests ausführen
         run: npm test -- --run
+
+      # Build-Artifact für Deploy-Job speichern
+      - name: Build-Artifact hochladen
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  # Job 2: Deploy zu GitHub Pages (nur bei Push auf main, nicht bei PR)
+  deploy:
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy zu GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
